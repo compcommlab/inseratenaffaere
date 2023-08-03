@@ -8,7 +8,8 @@ pkgs <- c(
     "ggthemes",
     "did",
     "DRDID",
-    "devtools"
+    "devtools",
+    "viridis"
 )
 
 install.packages(pkgs)
