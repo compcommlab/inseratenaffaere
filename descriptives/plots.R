@@ -1,8 +1,16 @@
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 library(ggthemes)
 
-df <- readRDS("data/dataset.rds") #
+df <- readRDS("data/dataset.rds")
+
+# remove Heute, Krone, Krone.at
+filt <- df$outlet %in% c('www.krone.at', 'Heute', 'Krone')
+df <- df[!filt, ]
+
+df$outlet <- as.factor(as.character(df$outlet)) # clean factor
+
 
 # Visibility
 
@@ -17,7 +25,8 @@ weekly_articles <- df_weeklyarticles |>
   geom_area() +
   facet_wrap(~outlet) +
   theme_clean() +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        plot.background = element_rect(color = NA)) +
   coord_cartesian(ylim = c(0, 250))
 
 ggsave("plots/01_descriptives_weekly_articles.png",
@@ -49,7 +58,8 @@ daily_sentiment <- df_dailysentiment |>
   theme_clean() +
   theme(
     legend.position = "none",
-    panel.spacing = unit(2, "lines")
+    panel.spacing = unit(2, "lines"),
+    plot.background = element_rect(color = NA)
   ) +
   coord_cartesian(ylim = c(-0.3, 0.3)) +
   geom_hline(yintercept = 0)
