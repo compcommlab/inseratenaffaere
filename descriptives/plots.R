@@ -39,6 +39,18 @@ ggsave("plots/01_descriptives_weekly_articles.png",
   scale = 2
 )
 
+
+ggsave("plots/01_descriptives_weekly_articles.pdf",
+  weekly_articles,
+  device = "pdf",
+  width = 16,
+  height = 9,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+
 # Favourability (Sentiment)
 
 # daily sentiment
@@ -67,6 +79,17 @@ daily_sentiment <- df_dailysentiment |>
 ggsave("plots/01_descriptives_daily_sentiment.png",
   daily_sentiment,
   device = "png",
+  width = 16,
+  height = 9,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+
+ggsave("plots/01_descriptives_daily_sentiment.pdf",
+  daily_sentiment,
+  device = "pdf",
   width = 16,
   height = 9,
   units = "cm",
