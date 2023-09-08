@@ -523,3 +523,119 @@ ggsave("plots/robustness_2a_all_tabloids.pdf",
   scale = 2
 )
 
+# Robustness 1a - Include all Tabloids in Control Group and run estimations indivdually
+
+results_rob_1a_all_tabloids_individually <- 
+  readRDS('results/robustness_1a_outlets_individually_all_tabloids.RDS')
+
+
+results_rob_1a_all_tabloids_individually$`Treatment Period` <- 
+  factor(ifelse(results_rob_1a_all_tabloids_individually$pre_treatment,
+                              'Pre',
+                              'Post'), levels = c('Pre', 'Post'))
+
+
+plot_r1a_all_tabloids_individually <- results_rob_1a_all_tabloids_individually |>
+  mutate(outlet = paste('www.oe24.at vs', outlet)) |>
+  ggplot(aes(x=year, y=ATET, 
+            color = `Treatment Period`, 
+            shape = `Treatment Period`)) +
+  # convoluted solution to plot confidence intervals
+  geom_segment(aes(xend = year, y = lci, yend = uci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = lci, y = lci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = uci, y = uci)) +
+  # actual point estimates
+  geom_point(size=2) +
+  # fix year scale
+  scale_x_continuous(breaks = years) +
+  # theme
+  theme_clean() +
+  theme(legend.position = "top",
+        panel.spacing = unit(2, "lines"),
+        plot.background = element_rect(color = NA)) +
+  geom_hline(yintercept = 0, linetype = 'dashed') +
+  # colors for publication
+  scale_color_viridis(discrete = TRUE, option = "magma", end = 0.6) +
+  # scale_color_grey(start = 0, end = 0.4) +
+  # show the comparison point
+  # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
+  # facet against outlet
+  facet_wrap(~outlet*actor, ncol = 3)
+
+ggsave("plots/robustneess_1a_outlets_individually_all_tabloids.png",
+  plot_r1a_all_tabloids_individually,
+  device = "png",
+  width = 16,
+  height = 28,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+ggsave("plots/robustneess_1a_outlets_individually_all_tabloids.pdf",
+  plot_r1a_all_tabloids_individually,
+  device = "pdf",
+  width = 16,
+  height = 28,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+
+
+# robustness 2a Include all Tabloids in Control Group and run estimations indivdually
+
+results_rob_2a_all_tabloids_individually <- readRDS("results/robustness_2a_outlets_individually_all_tabloids.RDS")
+
+results_rob_2a_all_tabloids_individually$`Treatment Period` <- factor(ifelse(results_rob_2a_all_tabloids_individually$pre_treatment,
+                              'Pre',
+                              'Post'), levels = c('Pre', 'Post'))
+
+
+plot_r2a_all_tabloids_individually <- results_rob_2a_all_tabloids_individually |>
+  mutate(outlet = paste('www.oe24.at vs', outlet)) |>
+  ggplot(aes(x=year, y=ATET, 
+            color = `Treatment Period`, 
+            shape = `Treatment Period`)) +
+  # convoluted solution to plot confidence intervals
+  geom_segment(aes(xend = year, y = lci, yend = uci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = lci, y = lci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = uci, y = uci)) +
+  # actual point estimates
+  geom_point(size=2) +
+  # fix year scale
+  scale_x_continuous(breaks = years) +
+  # theme
+  theme_clean() +
+  theme(legend.position = "top",
+        panel.spacing = unit(2, "lines"),
+        plot.background = element_rect(color = NA)) +
+  geom_hline(yintercept = 0, linetype = 'dashed') +
+  # colors for publication
+  scale_color_viridis(discrete = TRUE, option = "magma", end = 0.6) +
+  # scale_color_grey(start = 0, end = 0.4) +
+  # show the comparison point
+  # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
+  # facet against outlet
+  facet_wrap(~outlet*actor, ncol = 3)
+
+ggsave("plots/robustneess_2a_outlets_individually_all_tabloids.png",
+  plot_r2a_all_tabloids_individually,
+  device = "png",
+  width = 16,
+  height = 28,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+ggsave("plots/robustneess_2a_outlets_individually_all_tabloids.pdf",
+  plot_r2a_all_tabloids_individually,
+  device = "pdf",
+  width = 16,
+  height = 28,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
