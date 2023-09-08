@@ -4,9 +4,15 @@ library(readr)
 
 df <- readRDS("data/dataset.rds")
 
-# remove Heute, Krone, Krone.at
-filt <- df$outlet %in% c('www.krone.at', 'Heute', 'Krone')
-df <- df[!filt, ]
+# Control whether to include the other tabloids or not
+INCLUDE_TABLOIDS <- FALSE
+
+if (!INCLUDE_TABLOIDS) {
+  # remove Heute, Krone, Krone.at
+  filt <- df$outlet %in% c('www.krone.at', 'Heute', 'Krone')
+  df <- df[!filt, ]
+}
+
 
 df$outlet <- as.factor(as.character(df$outlet)) # clean factor
 
@@ -49,6 +55,9 @@ actors <- actors |>
   mutate(across(Kurz_paragraphs:n.y, ~ format(.x, big.mark = ",")))
 
 write_csv(actors, "tables/01_descriptives_actors_mentioned.csv")
+
+# Latex Output
+# knitr::kable(actors, format="latex", booktabs=T, format.args=list(big.mark=","))
 
 
 # Parties Dataset
@@ -101,3 +110,5 @@ actors <- actors |>
   mutate(across(`ÖVP_paragraphs`:n.y, ~ format(.x, big.mark = ",")))
 
 write_csv(actors, "tables/01_descriptives_parties_mentioned.csv")
+# Latex Output
+# knitr::kable(actors, format="latex", booktabs=T, format.args=list(big.mark=","))
