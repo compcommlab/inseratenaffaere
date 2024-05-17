@@ -5,9 +5,14 @@ library(ggthemes)
 
 df <- readRDS("data/dataset.rds")
 
-# remove Heute, Krone, Krone.at
-filt <- df$outlet %in% c('www.krone.at', 'Heute', 'Krone')
-df <- df[!filt, ]
+# Control whether to include the other tabloids or not
+INCLUDE_TABLOIDS <- FALSE
+
+if (!INCLUDE_TABLOIDS) {
+  # remove Heute, Krone, Krone.at
+  filt <- df$outlet %in% c("krone.at", "Heute", "Krone")
+  df <- df[!filt, ]
+}
 
 df$outlet <- as.factor(as.character(df$outlet)) # clean factor
 
@@ -15,6 +20,8 @@ df$outlet <- as.factor(as.character(df$outlet)) # clean factor
 # Visibility
 
 df_weeklyarticles <- df |>
+  mutate(actors = Kurz + Mitterlehner + Strache + `SPÖ-Leader`) |>
+  filter(actors > 0) |>
   distinct(doc_uid, .keep_all = T) |>
   mutate(week = lubridate::floor_date(date, unit = "week")) |>
   group_by(week, outlet) |>
@@ -25,9 +32,11 @@ weekly_articles <- df_weeklyarticles |>
   geom_area() +
   facet_wrap(~outlet) +
   theme_clean() +
-  theme(legend.position = "none",
-        plot.background = element_rect(color = NA)) +
-  coord_cartesian(ylim = c(0, 250))
+  theme(
+    legend.position = "none",
+    plot.background = element_rect(color = NA)
+  ) +
+  coord_cartesian(ylim = c(0, 200))
 
 ggsave("plots/01_descriptives_weekly_articles.png",
   weekly_articles,
@@ -55,10 +64,13 @@ ggsave("plots/01_descriptives_weekly_articles.pdf",
 
 # daily sentiment
 df_dailysentiment <- df |>
-  mutate(across(Kurz:Strache, ~ .x * sentiment_gottbert_regression)) |>
+  mutate(across(
+    c(Kurz, Mitterlehner, Strache, `SPÖ-Leader`),
+    ~ .x * sentiment_gottbert_regression
+  )) |>
   group_by(date) |>
-  summarise(across(Kurz:Strache, mean)) |>
-  pivot_longer(Kurz:Strache,
+  summarise(across(c(Kurz, Mitterlehner, Strache, `SPÖ-Leader`), mean)) |>
+  pivot_longer(c(Kurz, Mitterlehner, Strache, `SPÖ-Leader`),
     names_to = "Actor",
     values_to = "Average Sentiment"
   )
@@ -73,7 +85,7 @@ daily_sentiment <- df_dailysentiment |>
     panel.spacing = unit(2, "lines"),
     plot.background = element_rect(color = NA)
   ) +
-  coord_cartesian(ylim = c(-0.3, 0.3)) +
+  coord_cartesian(ylim = c(-0.4, 0.4)) +
   geom_hline(yintercept = 0)
 
 ggsave("plots/01_descriptives_daily_sentiment.png",

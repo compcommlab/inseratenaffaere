@@ -3,9 +3,26 @@
 
 # Unit of analysis is sentiment score on article level (local clustering)
 
-# Treatment group: sentiment score in www.oe24.at
-# Control group: Der Standard, Die Presse, Kurier, standard.at, kurier.at
 # Treatment year: 2016
+# Treatment group: sentiment score in oe24.at
+# Control group:
+# - Der Standard
+# - derstandard.at
+# - Die Presse
+# - diepresse.com
+# - Kleine Zeitung
+# - kleinezeitung.at
+# - Kurier
+# - kurier.at
+# - Niederösterreichische Nachrichten
+# - Oberösterreichisches Volksblatt
+# - oe24.at
+# - OÖ Nachrichten
+# - Salzburger Nachrichten
+# - sn.at
+# - Tiroler Tageszeitung
+# - Vorarlberger Nachrichten
+# - Wiener Zeitung
 
 
 library(dplyr)
@@ -21,7 +38,7 @@ n_cores <- parallel::detectCores() - 2
 df <- readRDS("data/parties_random_sample.rds")
 
 # remove Heute, Krone, Krone.at
-filt <- df$outlet %in% c('www.krone.at', 'Heute', 'Krone')
+filt <- df$outlet %in% c("krone.at", "Heute", "Krone")
 df <- df[!filt, ]
 
 df$outlet <- as.factor(as.character(df$outlet)) # clean factor
@@ -37,11 +54,11 @@ df <- df |>
     mutate(id = cur_group_id())
 
 # Assign some basic variables
-df$treat <- as.numeric(df$outlet == "www.oe24.at") # we want to check treatment against this outlet
+df$treat <- as.numeric(df$outlet == "oe24.at") # we want to check treatment against this outlet
 df$year <- lubridate::year(df$month) # cast to year
 
 # estimations for Political Parties
-actors <- c("oevp", "spoe", "fpoe", "gruene")
+actors <- c("ÖVP", "SPÖ", "FPÖ", "Grüne")
 
 # Pre-allocate dummy variable
 df$year_dummy <- 0

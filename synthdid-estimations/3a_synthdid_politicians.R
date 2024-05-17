@@ -2,9 +2,9 @@
 # DiD relies on the assumption that visibility for different politicians
 # would have evolved in a parallel way absent any intervention.
 # There is variation in the visibility of actors in the pre-treatment period.
-# "What synthetic DiD does here is to re-weight the unexposed control units 
+# "What synthetic DiD does here is to re-weight the unexposed control units
 # to make their time trend parallel (but not necessarily identical)
-# to pre-intervention, and then applies a DID analysis to this re-weighted panel." 
+# to pre-intervention, and then applies a DID analysis to this re-weighted panel."
 # (Arkhangelsky et al, 2018)
 
 library(dplyr)
@@ -14,7 +14,7 @@ library(synthdid)
 df <- readRDS("data/dataset.rds")
 
 # remove Heute, Krone, Krone.at
-filt <- df$outlet %in% c('www.krone.at', 'Heute', 'Krone')
+filt <- df$outlet %in% c("krone.at", "Heute", "Krone")
 df <- df[!filt, ]
 
 df$outlet <- as.factor(as.character(df$outlet)) # clean factor
@@ -34,8 +34,11 @@ filt <- df$date <= "2019-12-31"
 
 df <- df[filt, ]
 
+# rename SPÖ-Leader because synthdid cannot handle special characters
+df <- df |> rename(spoe_leader="SPÖ-Leader")
+
 # Create a vector containing the actors we want to analyze
-actors <- c("Strache", "Kurz", 'Mitterlehner')
+actors <- c("Kurz", "Strache", "Mitterlehner", "spoe_leader")
 
 # Loop over each actor in the vector "actors" and
 # calculate the total number of paragraphs per month
@@ -44,7 +47,7 @@ df <- df |>
   group_by(yearmonth, outlet) |>
   mutate(across(all_of(actors), sum, .names = "actor_{.col}")) |>
   ungroup() |>
-  select(outlet, year, month, actor_Strache, actor_Kurz, actor_Mitterlehner)
+  select(outlet, year, month, actor_Strache, actor_Kurz, actor_Mitterlehner, `actor_spoe_leader`)
 
 # Drop duplicate observations
 df <- df %>%
@@ -69,13 +72,13 @@ df <- df %>%
 
 # Create a variable defining the treatment group
 # in the post-treatment period
-# (takes the value of 1 if the variable outlet = www.oe24.at
+# (takes the value of 1 if the variable outlet = oe24.at
 # in the years 2016-2020, and 0 otherwise)
 
 treatment_year <- 2016
 
 df <- df %>%
-  mutate(treat = as.integer(outlet == "www.oe24.at" & year >= treatment_year))
+  mutate(treat = as.integer(outlet == "oe24.at" & year >= treatment_year))
 
 # synthdid package doesn't like tibbles
 df <- as.data.frame(df)
@@ -85,6 +88,7 @@ results <- list()
 # Run estimations for each actor and save results
 for (a in actors) {
   setup <- panel.matrices(df,
+    # error here with umlaut
     unit = "id",
     time = "year",
     outcome = paste0("ln_actor_", a),
@@ -92,20 +96,24 @@ for (a in actors) {
   )
 
   tau_hat <- synthdid_estimate(setup$Y, setup$N0, setup$T0)
-  se = sqrt(vcov(tau_hat, method='placebo'))
-  tval = as.numeric(tau_hat) / se # t-values based on asymptotic formula
-  pval = 2 * pnorm(-abs(tval)) # p-values based on asymptotic formula
-  
-  results[[a]] <- data.frame(actor = a, 
-                             tau_hat = as.numeric(tau_hat),
-                             se = se,
-                             tval = tval,
-                             pval = pval,
-                             lci = as.numeric(tau_hat) - 1.96 * se,
-                             uci = as.numeric(tau_hat) + 1.96 * se)
+  se <- sqrt(vcov(tau_hat, method = "placebo"))
+  tval <- as.numeric(tau_hat) / se # t-values based on asymptotic formula
+  pval <- 2 * pnorm(-abs(tval)) # p-values based on asymptotic formula
+
+  results[[a]] <- data.frame(
+    actor = a,
+    tau_hat = as.numeric(tau_hat),
+    se = se,
+    tval = tval,
+    pval = pval,
+    lci = as.numeric(tau_hat) - 1.96 * se,
+    uci = as.numeric(tau_hat) + 1.96 * se
+  )
 }
 
 results <- dplyr::bind_rows(results)
+
+results$actor <- gsub("spoe_leader", "SPÖ-Leader", results$actor)
 
 saveRDS(results, paste0("results/3a_synthdid_total.RDS"))
 
@@ -117,15 +125,14 @@ years <- 2016:2019
 results <- list()
 
 for (a in actors) {
-
-  actor_results <- data.frame(year=years)
+  actor_results <- data.frame(year = years)
   actor_results$actor <- a
   actor_results$tau_hat <- NA # average treatment effect on the treated (ATET)
   actor_results$standard_error <- NA # standard error
   actor_results$t_value <- NA # t value
   actor_results$p_value <- NA # Pr(>|t|)
   actor_results$lci <- NA # lower confidence interval
-  actor_results$uci <- NA  # upper confidence interval
+  actor_results$uci <- NA # upper confidence interval
 
   for (j in years) {
     new_df <- df[(df$year < treatment_year | df$year == j), ]
@@ -138,18 +145,18 @@ for (a in actors) {
     )
 
     tau_hat <- synthdid_estimate(setup$Y, setup$N0, setup$T0)
-    se = sqrt(vcov(tau_hat, method='placebo'))
-    tval = as.numeric(tau_hat) / se # t-values based on asymptotic formula
-    pval = 2 * pnorm(-abs(tval)) # p-values based on asymptotic formula
+    se <- sqrt(vcov(tau_hat, method = "placebo"))
+    tval <- as.numeric(tau_hat) / se # t-values based on asymptotic formula
+    pval <- 2 * pnorm(-abs(tval)) # p-values based on asymptotic formula
 
-    actor_results[actor_results$year == j, 'tau_hat'] <- as.numeric(tau_hat)
-    actor_results[actor_results$year == j, 'standard_error'] <- se
-    actor_results[actor_results$year == j, 't_value'] <- tval
-    actor_results[actor_results$year == j, 'p_value'] <- pval
-    actor_results[actor_results$year == j, 'lci'] <- as.numeric(tau_hat) - 1.96 * se
-    actor_results[actor_results$year == j, 'uci'] <- as.numeric(tau_hat) + 1.96 * se
-   }
-   results[[a]] <- actor_results
+    actor_results[actor_results$year == j, "tau_hat"] <- as.numeric(tau_hat)
+    actor_results[actor_results$year == j, "standard_error"] <- se
+    actor_results[actor_results$year == j, "t_value"] <- tval
+    actor_results[actor_results$year == j, "p_value"] <- pval
+    actor_results[actor_results$year == j, "lci"] <- as.numeric(tau_hat) - 1.96 * se
+    actor_results[actor_results$year == j, "uci"] <- as.numeric(tau_hat) + 1.96 * se
+  }
+  results[[a]] <- actor_results
 }
 
 
@@ -159,5 +166,6 @@ results <- dplyr::bind_rows(results)
 # drop years without estimation
 results <- results[!is.na(results$tau_hat), ]
 results$pre_treatment <- results$year < treatment_year
+results$actor <- gsub("spoe_leader", "SPÖ-Leader", results$actor)
 
 saveRDS(results, file = "results/3a_synthdid_year.RDS")

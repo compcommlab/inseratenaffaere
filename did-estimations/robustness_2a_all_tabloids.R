@@ -3,9 +3,29 @@
 
 # Unit of analysis is sentiment score on article level (local clustering)
 
-# Treatment group: sentiment score in www.oe24.at
-# Control group: Der Standard, Die Presse, Kurier, standard.at, kurier.at, Krone, Krone.at, Heute
 # Treatment year: 2016
+# Treatment group: sentiment score in oe24.at
+# Control group:
+# - Der Standard
+# - derstandard.at
+# - Die Presse
+# - diepresse.com
+# - Kleine Zeitung
+# - kleinezeitung.at
+# - Kurier
+# - kurier.at
+# - Niederösterreichische Nachrichten
+# - Oberösterreichisches Volksblatt
+# - oe24.at
+# - OÖ Nachrichten
+# - Salzburger Nachrichten
+# - sn.at
+# - Tiroler Tageszeitung
+# - Vorarlberger Nachrichten
+# - Wiener Zeitung
+# - Krone
+# - Krone.at
+# - Heute
 
 
 library(dplyr)
@@ -31,11 +51,11 @@ df <- df |>
     mutate(id = cur_group_id())
 
 # Assign some basic variables
-df$treat <- as.numeric(df$outlet == "www.oe24.at") # we want to check treatment against this outlet
+df$treat <- as.numeric(df$outlet == "oe24.at") # we want to check treatment against this outlet
 df$year <- lubridate::year(df$month) # cast to year
 
-# estimations for Kurz and Strache
-actors <- c("Kurz", "Strache", "Mitterlehner")
+# estimations for actors
+actors <- c("Kurz", "Strache", "Mitterlehner", "SPÖ-Leader")
 
 # Pre-allocate dummy variable
 df$year_dummy <- 0
@@ -60,10 +80,9 @@ for (a in actors) {
     actor_results$uci <- NA # upper confidence interval
 
     for (i in years) {
-
         # since Mitterlehner is not mentioned much after 2019,
         # the analysis here is only carried out up to and including 2019.
-        if (a == 'Mitterlehner' & i > 2019) {
+        if (a == "Mitterlehner" & i > 2019) {
             next
         }
 

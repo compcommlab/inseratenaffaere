@@ -4,9 +4,26 @@
 # Unit of analysis is actor visibility in paragraphs
 # aggregated on monthly visibility
 
-# Treatment group: visibility in www.oe24.at
-# Control group: Der Standard, Die Presse, Kurier, standard.at, kurier.at
 # Treatment year: 2016
+# Treatment group: visibility in oe24.at
+# Control group:
+# - Der Standard
+# - derstandard.at
+# - Die Presse
+# - diepresse.com
+# - Kleine Zeitung
+# - kleinezeitung.at
+# - Kurier
+# - kurier.at
+# - Niederösterreichische Nachrichten
+# - Oberösterreichisches Volksblatt
+# - oe24.at
+# - OÖ Nachrichten
+# - Salzburger Nachrichten
+# - sn.at
+# - Tiroler Tageszeitung
+# - Vorarlberger Nachrichten
+# - Wiener Zeitung
 
 
 library(dplyr)
@@ -17,7 +34,7 @@ library(did)
 df <- readRDS("data/dataset.rds")
 
 # remove Heute, Krone, Krone.at
-filt <- df$outlet %in% c('www.krone.at', 'Heute', 'Krone')
+filt <- df$outlet %in% c("krone.at", "Heute", "Krone")
 df <- df[!filt, ]
 
 df$outlet <- as.factor(as.character(df$outlet)) # clean factor
@@ -27,7 +44,7 @@ df$outlet <- as.factor(as.character(df$outlet)) # clean factor
 df$month <- lubridate::floor_date(df$date, unit = "month")
 
 # Create a vector containing the actors we want to analyze
-actors <- c("Kurz", "Mitterlehner", "Strache")
+actors <- c("Kurz", "Mitterlehner", "Strache", "SPÖ-Leader")
 
 # Aggregate by actor monthly mentions
 # - calculate the total number of paragraphs per month for each actor
@@ -41,18 +58,18 @@ df <- df |>
 # is replaced by the value 1 so that the logarithm can be calculated in the next step
 
 df <- df |>
-  mutate(across(all_of(paste0('actor_', actors)), ~ if_else(.x == 0, 1, .x)))
+  mutate(across(all_of(paste0("actor_", actors)), ~ if_else(.x == 0, 1, .x)))
 
 # calculate the natural logarithm of the number of paragraphs per outlet
 # and month for the current actor
 
 df <- df |>
-  mutate(across(all_of(paste0('actor_', actors)), log, .names = "ln_{.col}"))
+  mutate(across(all_of(paste0("actor_", actors)), log, .names = "ln_{.col}"))
 
 # Assign estimation variables
 
 # Treatment variable
-df$treat <- as.numeric(df$outlet == 'www.oe24.at') # we want to check treatment against this outlet
+df$treat <- as.numeric(df$outlet == "oe24.at") # we want to check treatment against this outlet
 
 # We compare across years
 df$year <- lubridate::year(df$month) # cast to year
@@ -73,22 +90,21 @@ treatment_year <- 2016
 results <- list()
 # For each actor we run an estimation
 for (a in actors) {
-
-  actor_results <- data.frame(year=years)
+  actor_results <- data.frame(year = years)
   actor_results$actor <- a
   actor_results$ATET <- NA # average treatment effect on the treated (ATET)
   actor_results$standard_error <- NA # standard error
   actor_results$t_value <- NA # t value
   actor_results$pr_gt_t <- NA # Pr(>|t|)
   actor_results$lci <- NA # lower confidence interval
-  actor_results$uci <- NA  # upper confidence interval
+  actor_results$uci <- NA # upper confidence interval
 
   for (i in years) {
     # Run estimation for each actor at a given year (i)
 
     # since Mitterlehner is not mentioned much after 2019,
     # the analysis here is only carried out up to and including 2019.
-    if (a == 'Mitterlehner' & i > 2019) {
+    if (a == "Mitterlehner" & i > 2019) {
       next
     }
 
@@ -106,19 +122,21 @@ for (a in actors) {
       df$year_dummy <- as.numeric(df$year >= treatment_year)
       df_tmp <- subset(df, df$year == treatment_year - 1 | df$year == i)
     }
-    estimation <-  did::att_gt(yname = paste0("ln_actor_", a),
-                               tname = 'year_dummy',
-                               idname = 'id',
-                               gname = 'treat',
-                               panel = FALSE,
-                               data = df_tmp)
+    estimation <- did::att_gt(
+      yname = paste0("ln_actor_", a),
+      tname = "year_dummy",
+      idname = "id",
+      gname = "treat",
+      panel = FALSE,
+      data = df_tmp
+    )
 
-    actor_results[actor_results$year == i, 'ATET'] <- estimation$att
-    actor_results[actor_results$year == i, 'standard_error'] <- estimation$se
-    actor_results[actor_results$year == i, 't_value'] <- estimation$att / estimation$se
-    actor_results[actor_results$year == i, 'pr_gt_t'] <- (2 * (stats::pnorm(-abs(estimation$att / estimation$se))))
-    actor_results[actor_results$year == i, 'lci'] <- estimation$att - estimation$c * estimation$se
-    actor_results[actor_results$year == i, 'uci'] <- estimation$att + estimation$c * estimation$se
+    actor_results[actor_results$year == i, "ATET"] <- estimation$att
+    actor_results[actor_results$year == i, "standard_error"] <- estimation$se
+    actor_results[actor_results$year == i, "t_value"] <- estimation$att / estimation$se
+    actor_results[actor_results$year == i, "pr_gt_t"] <- (2 * (stats::pnorm(-abs(estimation$att / estimation$se))))
+    actor_results[actor_results$year == i, "lci"] <- estimation$att - estimation$c * estimation$se
+    actor_results[actor_results$year == i, "uci"] <- estimation$att + estimation$c * estimation$se
   }
   results[[a]] <- actor_results
 }

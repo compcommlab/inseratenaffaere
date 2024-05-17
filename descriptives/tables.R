@@ -9,7 +9,7 @@ INCLUDE_TABLOIDS <- FALSE
 
 if (!INCLUDE_TABLOIDS) {
   # remove Heute, Krone, Krone.at
-  filt <- df$outlet %in% c('www.krone.at', 'Heute', 'Krone')
+  filt <- df$outlet %in% c("krone.at", "Heute", "Krone")
   df <- df[!filt, ]
 }
 
@@ -21,24 +21,32 @@ total_articles <- length(unique(df$doc_uid))
 # mentions of actors in paragraphs per outlet
 paragraphs <- df |>
   group_by(outlet) |>
-  summarise(across(Kurz:Strache, sum, .names = "{.col}_paragraphs"))
+  summarise(across(c(Kurz, Mitterlehner, Strache, `SPÖ-Leader`),
+    sum,
+    .names = "{.col}_paragraphs"
+  ))
 
 total_paragraphs <- df |>
-  distinct(doc_uid, .keep_all = T) |>
+  mutate(actors = Kurz + Mitterlehner + Strache + `SPÖ-Leader`) |>
+  filter(actors > 0) |>
+  group_by(outlet, doc_uid) |>
+  count() |>
   group_by(outlet) |>
-  summarise(n = sum(total_paragraphs))
+  summarise(n = sum(n))
 
 # mention of actors in articles per outlet
 articles <- df |>
   group_by(doc_uid) |>
-  mutate(across(Kurz:Strache, max)) |>
+  mutate(across(c(Kurz, Mitterlehner, Strache, `SPÖ-Leader`), sum)) |>
   distinct(doc_uid, .keep_all = T) |>
   group_by(outlet) |>
-  summarise(across(Kurz:Strache, sum))
+  summarise(across(c(Kurz, Mitterlehner, Strache, `SPÖ-Leader`), sum))
 
 # total articles per outlet
 articles_total <- df |>
   distinct(doc_uid, .keep_all = T) |>
+  mutate(actors = Kurz + Mitterlehner + Strache + `SPÖ-Leader`) |>
+  filter(actors > 0) |>
   group_by(outlet) |>
   count()
 
@@ -67,29 +75,26 @@ df <- readRDS("data/parties_random_sample.rds")
 
 total_articles <- length(unique(df$doc_uid))
 
-df <- df |> 
-  rename('ÖVP' =  'oevp',
-        'SPÖ' = 'spoe',
-        'FPÖ' = 'fpoe',
-        'Grüne' = 'gruene') 
-
 # mentions of actors in paragraphs per outlet
 paragraphs <- df |>
   group_by(outlet) |>
-  summarise(across(`ÖVP`:`Grüne`, sum, .names = "{.col}_paragraphs"))
+  summarise(across(c(`ÖVP`, `SPÖ`, `FPÖ`, `Grüne`), sum, .names = "{.col}_paragraphs"))
 
 total_paragraphs <- df |>
-  distinct(doc_uid, .keep_all = T) |>
+  mutate(actors = `ÖVP` + `SPÖ` + `FPÖ` + `Grüne`) |>
+  filter(actors > 0) |>
+  group_by(outlet, doc_uid) |>
+  count() |>
   group_by(outlet) |>
-  summarise(n = sum(total_paragraphs))
+  summarise(n = sum(n))
 
 # mention of actors in articles per outlet
 articles <- df |>
   group_by(doc_uid) |>
-  mutate(across(`ÖVP`:`Grüne`, max)) |>
+  mutate(across(c(`ÖVP`, `SPÖ`, `FPÖ`, `Grüne`), sum)) |>
   distinct(doc_uid, .keep_all = T) |>
   group_by(outlet) |>
-  summarise(across(`ÖVP`:`Grüne`, sum))
+  summarise(across(c(`ÖVP`, `SPÖ`, `FPÖ`, `Grüne`), sum))
 
 # total articles per outlet
 articles_total <- df |>
