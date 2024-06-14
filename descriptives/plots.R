@@ -5,10 +5,10 @@ library(ggthemes)
 
 df <- readRDS("data/dataset.rds")
 
-# Control whether to include the other tabloids or not
-INCLUDE_TABLOIDS <- FALSE
+# Control whether to exclude the other tabloids or not
+EXCLUDE_TABLOIDS <- FALSE
 
-if (!INCLUDE_TABLOIDS) {
+if (EXCLUDE_TABLOIDS) {
   # remove Heute, Krone, Krone.at
   filt <- df$outlet %in% c("krone.at", "Heute", "Krone")
   df <- df[!filt, ]
@@ -16,12 +16,14 @@ if (!INCLUDE_TABLOIDS) {
 
 df$outlet <- as.factor(as.character(df$outlet)) # clean factor
 
+df <- df |> mutate(actors = Kurz + Mitterlehner + Strache + `SPÖ-Leader`)
+
+# filter out paragraphs without any actor mentioned
+df <- df[df$actors > 0, ]
 
 # Visibility
 
 df_weeklyarticles <- df |>
-  mutate(actors = Kurz + Mitterlehner + Strache + `SPÖ-Leader`) |>
-  filter(actors > 0) |>
   distinct(doc_uid, .keep_all = T) |>
   mutate(week = lubridate::floor_date(date, unit = "week")) |>
   group_by(week, outlet) |>
@@ -30,7 +32,7 @@ df_weeklyarticles <- df |>
 weekly_articles <- df_weeklyarticles |>
   ggplot(aes(x = week, y = n)) +
   geom_area() +
-  facet_wrap(~outlet) +
+  facet_wrap(~outlet, axes = "all") +
   theme_clean() +
   theme(
     legend.position = "none",

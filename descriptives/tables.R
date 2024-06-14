@@ -4,14 +4,25 @@ library(readr)
 
 df <- readRDS("data/dataset.rds")
 
-# Control whether to include the other tabloids or not
-INCLUDE_TABLOIDS <- FALSE
+# Control whether to exclude the other tabloids or not
+EXCLUDE_TABLOIDS <- FALSE
 
-if (!INCLUDE_TABLOIDS) {
+if (EXCLUDE_TABLOIDS) {
   # remove Heute, Krone, Krone.at
   filt <- df$outlet %in% c("krone.at", "Heute", "Krone")
   df <- df[!filt, ]
 }
+
+df <- df |> mutate(actors = Kurz + Mitterlehner + Strache + `SPÖ-Leader`)
+
+# filter out paragraphs without any actor mentioned
+df <- df[df$actors > 0, ]
+
+# how many times was more than one actor mentioned in a paragraph?
+more_than_one <- nrow(df[df$actors > 1, ])
+exactly_one <- nrow(df[df$actors == 1, ])
+
+more_than_one / exactly_one
 
 
 df$outlet <- as.factor(as.character(df$outlet)) # clean factor
@@ -27,8 +38,6 @@ paragraphs <- df |>
   ))
 
 total_paragraphs <- df |>
-  mutate(actors = Kurz + Mitterlehner + Strache + `SPÖ-Leader`) |>
-  filter(actors > 0) |>
   group_by(outlet, doc_uid) |>
   count() |>
   group_by(outlet) |>
