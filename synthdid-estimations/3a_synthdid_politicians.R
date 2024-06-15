@@ -115,7 +115,7 @@ results <- dplyr::bind_rows(results)
 
 results$actor <- gsub("spoe_leader", "SPÖ-Leader", results$actor)
 
-saveRDS(results, paste0("results/3a_synthdid_total.RDS"))
+saveRDS(results, "results/3a_synthdid_total.RDS")
 
 # Additional checks:
 # run estimations only considering

@@ -4,6 +4,7 @@ library(dplyr)
 library(ggplot2)
 library(ggthemes)
 library(viridis)
+library(knitr)
 
 years <- 2013:2019
 
@@ -65,3 +66,16 @@ ggsave("plots/3a_synthdid.pdf",
        dpi = 300,
        scale = 2
 )
+
+# Table for Appendix of average effect size
+
+results_3a_total <- readRDS("results/3a_synthdid_total.RDS")
+
+results_3a_total$`ATET (se)` <- paste0(round(results_3a_total$tau_hat, 2),
+                                       " (",
+                                       round(results_3a_total$se, 2),
+                                       ")",
+                                       ifelse(results_3a_total$pval < 0.001, "***", ""))
+
+
+knitr::kable(t(results_3a_total[, c("actor", "ATET (se)")]), "latex", booktabs = TRUE)

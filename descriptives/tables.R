@@ -82,6 +82,11 @@ write_csv(actors, "tables/01_descriptives_actors_mentioned.csv")
 
 df <- readRDS("data/parties_random_sample.rds")
 
+df$actors <- df$`ÖVP` + df$`SPÖ` + df$`FPÖ` + df$`Grüne`
+
+# filter out paragraphs without any actor mentioned
+df <- df[df$actors > 0, ]
+
 total_articles <- length(unique(df$doc_uid))
 
 # mentions of actors in paragraphs per outlet
@@ -90,8 +95,6 @@ paragraphs <- df |>
   summarise(across(c(`ÖVP`, `SPÖ`, `FPÖ`, `Grüne`), sum, .names = "{.col}_paragraphs"))
 
 total_paragraphs <- df |>
-  mutate(actors = `ÖVP` + `SPÖ` + `FPÖ` + `Grüne`) |>
-  filter(actors > 0) |>
   group_by(outlet, doc_uid) |>
   count() |>
   group_by(outlet) |>

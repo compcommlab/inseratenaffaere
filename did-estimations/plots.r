@@ -44,7 +44,7 @@ plot_1a <- results_1a |>
   # show the comparison point
   # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
   # facet against actor
-  facet_wrap(~actor)
+  facet_wrap(~actor, axes = "all")
 
 ggsave("plots/1a_paragraphs_politicians.png",
   plot_1a,
@@ -110,7 +110,7 @@ plot_1b <- results_1b |>
   # show the comparison point
   # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
   # facet against actor
-  facet_wrap(~actor)
+  facet_wrap(~actor, axes = "all")
 
 ggsave("plots/1b_paragraphs_parties.png",
   plot_1b,
@@ -171,7 +171,7 @@ plot_2a <- results_2a |>
   # show the comparison point
   # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
   # facet against actor
-  facet_wrap(~actor)
+  facet_wrap(~actor, axes = "all")
 
 
 ggsave("plots/2a_sentiment_politicians.png",
@@ -235,7 +235,7 @@ plot_2b <- results_2b |>
   # show the comparison point
   # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
   # facet against actor
-  facet_wrap(~actor)
+  facet_wrap(~actor, axes = "all")
 
 ggsave("plots/2b_sentiment_parties.png",
   plot_2b,
@@ -297,12 +297,12 @@ plot_r1a_kurz <- results_rob_1a |>
   # show the comparison point
   # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
   # facet against outlet
-  facet_wrap(~outlet)
+  facet_wrap(~outlet, axes = "all")
 
 ggsave("plots/robustneess_1a_outlets_individually_kurz.png",
   plot_r1a_kurz,
   device = "png",
-  width = 20,
+  width = 22,
   height = 16,
   units = "cm",
   dpi = 300,
@@ -312,7 +312,7 @@ ggsave("plots/robustneess_1a_outlets_individually_kurz.png",
 ggsave("plots/robustneess_1a_outlets_individually_kurz.pdf",
   plot_r1a_kurz,
   device = "pdf",
-  width = 20,
+  width = 22,
   height = 16,
   units = "cm",
   dpi = 300,
@@ -320,7 +320,8 @@ ggsave("plots/robustneess_1a_outlets_individually_kurz.pdf",
 )
 
 
-plot_r1a_all <- results_rob_1a |>
+plot_r1a_strache <- results_rob_1a |>
+  filter(actor == "Strache") |>
   mutate(outlet = paste("oe24.at vs", outlet)) |>
   ggplot(aes(
     x = year, y = ATET,
@@ -349,23 +350,129 @@ plot_r1a_all <- results_rob_1a |>
   # show the comparison point
   # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
   # facet against outlet
-  facet_wrap(~ outlet * actor, ncol = 3)
+  facet_wrap(~outlet, axes = "all")
 
-ggsave("plots/robustneess_1a_outlets_individually_all.png",
-  plot_r1a_all,
+ggsave("plots/robustneess_1a_outlets_individually_strache.png",
+  plot_r1a_strache,
   device = "png",
-  width = 16,
-  height = 18,
+  width = 22,
+  height = 16,
   units = "cm",
   dpi = 300,
   scale = 2
 )
 
-ggsave("plots/robustneess_1a_outlets_individually_all.pdf",
-  plot_r1a_all,
+ggsave("plots/robustneess_1a_outlets_individually_strache.pdf",
+  plot_r1a_strache,
   device = "pdf",
-  width = 16,
-  height = 18,
+  width = 22,
+  height = 16,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+
+plot_r1a_mitterlehner <- results_rob_1a |>
+  filter(actor == "Mitterlehner") |>
+  mutate(outlet = paste("oe24.at vs", outlet)) |>
+  ggplot(aes(
+    x = year, y = ATET,
+    color = `Treatment Period`,
+    shape = `Treatment Period`
+  )) +
+  # convoluted solution to plot confidence intervals
+  geom_segment(aes(xend = year, y = lci, yend = uci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = lci, y = lci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = uci, y = uci)) +
+  # actual point estimates
+  geom_point(size = 2) +
+  # fix year scale
+  scale_x_continuous(breaks = years) +
+  # theme
+  theme_clean() +
+  theme(
+    legend.position = "top",
+    panel.spacing = unit(2, "lines"),
+    plot.background = element_rect(color = NA)
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  # colors for publication
+  scale_color_viridis(discrete = TRUE, option = "magma", end = 0.6) +
+  # scale_color_grey(start = 0, end = 0.4) +
+  # show the comparison point
+  # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
+  # facet against outlet
+  facet_wrap(~outlet, axes = "all")
+
+ggsave("plots/robustneess_1a_outlets_individually_mitterlehner.png",
+  plot_r1a_mitterlehner,
+  device = "png",
+  width = 22,
+  height = 16,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+ggsave("plots/robustneess_1a_outlets_individually_mitterlehner.pdf",
+  plot_r1a_mitterlehner,
+  device = "pdf",
+  width = 22,
+  height = 16,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+
+plot_r1a_spoe_leader <- results_rob_1a |>
+  filter(actor == "SPÖ-Leader") |>
+  mutate(outlet = paste("oe24.at vs", outlet)) |>
+  ggplot(aes(
+    x = year, y = ATET,
+    color = `Treatment Period`,
+    shape = `Treatment Period`
+  )) +
+  # convoluted solution to plot confidence intervals
+  geom_segment(aes(xend = year, y = lci, yend = uci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = lci, y = lci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = uci, y = uci)) +
+  # actual point estimates
+  geom_point(size = 2) +
+  # fix year scale
+  scale_x_continuous(breaks = years) +
+  # theme
+  theme_clean() +
+  theme(
+    legend.position = "top",
+    panel.spacing = unit(2, "lines"),
+    plot.background = element_rect(color = NA)
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  # colors for publication
+  scale_color_viridis(discrete = TRUE, option = "magma", end = 0.6) +
+  # scale_color_grey(start = 0, end = 0.4) +
+  # show the comparison point
+  # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
+  # facet against outlet
+  facet_wrap(~outlet, axes = "all")
+
+ggsave("plots/robustneess_1a_outlets_individually_spoe_leader.png",
+  plot_r1a_spoe_leader,
+  device = "png",
+  width = 22,
+  height = 16,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+ggsave("plots/robustneess_1a_outlets_individually_spoe_leader.pdf",
+  plot_r1a_spoe_leader,
+  device = "pdf",
+  width = 22,
+  height = 16,
   units = "cm",
   dpi = 300,
   scale = 2
@@ -383,7 +490,8 @@ results_rob_2a$`Treatment Period` <- factor(ifelse(results_rob_2a$pre_treatment,
 ), levels = c("Pre", "Post"))
 
 
-plot_r2a_all <- results_rob_2a |>
+plot_r2a_kurz <- results_rob_2a |>
+  filter(actor == "Kurz") |> 
   mutate(outlet = paste("oe24.at vs", outlet)) |>
   ggplot(aes(
     x = year, y = ATET,
@@ -412,23 +520,182 @@ plot_r2a_all <- results_rob_2a |>
   # show the comparison point
   # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
   # facet against outlet
-  facet_wrap(~ outlet * actor, ncol = 4)
+  facet_wrap(~ outlet)
 
-ggsave("plots/robustneess_2a_outlets_individually_all.png",
-  plot_r2a_all,
+ggsave("plots/robustness_2a_outlets_individually_kurz.png",
+  plot_r2a_kurz,
   device = "png",
-  width = 20,
-  height = 60,
+  width = 22,
+  height = 16,
   units = "cm",
   dpi = 300,
   scale = 2
 )
 
-ggsave("plots/robustneess_2a_outlets_individually_all.pdf",
-  plot_r2a_all,
+ggsave("plots/robustness_2a_outlets_individually_kurz.pdf",
+  plot_r2a_kurz,
   device = "pdf",
-  width = 16,
-  height = 18,
+  width = 22,
+  height = 16,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+
+plot_r2a_strache <- results_rob_2a |>
+  filter(actor == "Strache") |> 
+  mutate(outlet = paste("oe24.at vs", outlet)) |>
+  ggplot(aes(
+    x = year, y = ATET,
+    color = `Treatment Period`,
+    shape = `Treatment Period`
+  )) +
+  # convoluted solution to plot confidence intervals
+  geom_segment(aes(xend = year, y = lci, yend = uci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = lci, y = lci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = uci, y = uci)) +
+  # actual point estimates
+  geom_point(size = 2) +
+  # fix year scale
+  scale_x_continuous(breaks = years) +
+  # theme
+  theme_clean() +
+  theme(
+    legend.position = "top",
+    panel.spacing = unit(2, "lines"),
+    plot.background = element_rect(color = NA)
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  # colors for publication
+  scale_color_viridis(discrete = TRUE, option = "magma", end = 0.6) +
+  # scale_color_grey(start = 0, end = 0.4) +
+  # show the comparison point
+  # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
+  # facet against outlet
+  facet_wrap(~ outlet)
+
+ggsave("plots/robustness_2a_outlets_individually_strache.png",
+  plot_r2a_strache,
+  device = "png",
+  width = 22,
+  height = 16,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+ggsave("plots/robustness_2a_outlets_individually_strache.pdf",
+  plot_r2a_strache,
+  device = "pdf",
+  width = 22,
+  height = 16,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+
+plot_r2a_mitterlehner <- results_rob_2a |>
+  filter(actor == "Mitterlehner") |> 
+  mutate(outlet = paste("oe24.at vs", outlet)) |>
+  ggplot(aes(
+    x = year, y = ATET,
+    color = `Treatment Period`,
+    shape = `Treatment Period`
+  )) +
+  # convoluted solution to plot confidence intervals
+  geom_segment(aes(xend = year, y = lci, yend = uci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = lci, y = lci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = uci, y = uci)) +
+  # actual point estimates
+  geom_point(size = 2) +
+  # fix year scale
+  scale_x_continuous(breaks = years) +
+  # theme
+  theme_clean() +
+  theme(
+    legend.position = "top",
+    panel.spacing = unit(2, "lines"),
+    plot.background = element_rect(color = NA)
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  # colors for publication
+  scale_color_viridis(discrete = TRUE, option = "magma", end = 0.6) +
+  # scale_color_grey(start = 0, end = 0.4) +
+  # show the comparison point
+  # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
+  # facet against outlet
+  facet_wrap(~ outlet)
+
+ggsave("plots/robustness_2a_outlets_individually_mitterlehner.png",
+  plot_r2a_mitterlehner,
+  device = "png",
+  width = 22,
+  height = 16,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+ggsave("plots/robustness_2a_outlets_individually_mitterlehner.pdf",
+  plot_r2a_mitterlehner,
+  device = "pdf",
+  width = 22,
+  height = 16,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+
+plot_r2a_spoe_leader <- results_rob_2a |>
+  filter(actor == "SPÖ-Leader") |> 
+  mutate(outlet = paste("oe24.at vs", outlet)) |>
+  ggplot(aes(
+    x = year, y = ATET,
+    color = `Treatment Period`,
+    shape = `Treatment Period`
+  )) +
+  # convoluted solution to plot confidence intervals
+  geom_segment(aes(xend = year, y = lci, yend = uci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = lci, y = lci)) +
+  geom_segment(aes(xend = year + 0.1, x = year - 0.1, yend = uci, y = uci)) +
+  # actual point estimates
+  geom_point(size = 2) +
+  # fix year scale
+  scale_x_continuous(breaks = years) +
+  # theme
+  theme_clean() +
+  theme(
+    legend.position = "top",
+    panel.spacing = unit(2, "lines"),
+    plot.background = element_rect(color = NA)
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  # colors for publication
+  scale_color_viridis(discrete = TRUE, option = "magma", end = 0.6) +
+  # scale_color_grey(start = 0, end = 0.4) +
+  # show the comparison point
+  # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
+  # facet against outlet
+  facet_wrap(~ outlet)
+
+ggsave("plots/robustness_2a_outlets_individually_spoe_leader.png",
+  plot_r2a_spoe_leader,
+  device = "png",
+  width = 22,
+  height = 16,
+  units = "cm",
+  dpi = 300,
+  scale = 2
+)
+
+ggsave("plots/robustness_2a_outlets_individually_spoe_leader.pdf",
+  plot_r2a_spoe_leader,
+  device = "pdf",
+  width = 22,
+  height = 16,
   units = "cm",
   dpi = 300,
   scale = 2
@@ -474,7 +741,7 @@ plot_r1a_all <- results_r1a_all |>
   # show the comparison point
   # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
   # facet against actor
-  facet_wrap(~actor)
+  facet_wrap(~actor, axes = "all")
 
 ggsave("plots/robustness_1a_all_tabloids.png",
   plot_r1a_all,
@@ -534,7 +801,7 @@ plot_r2a_all <- results_r2a_all |>
   # show the comparison point
   # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
   # facet against actor
-  facet_wrap(~actor)
+  facet_wrap(~actor, axes = "all")
 
 
 ggsave("plots/robustness_2a_all_tabloids.png",
@@ -599,12 +866,12 @@ plot_r1a_all_tabloids_individually <- results_rob_1a_all_tabloids_individually |
   # show the comparison point
   # geom_vline(xintercept = 2015.5, linetype = 'dotted') +
   # facet against outlet
-  facet_wrap(~ outlet * actor, ncol = 4)
+  facet_wrap(~ outlet * actor, ncol = 4, axes = "all")
 
 ggsave("plots/robustneess_1a_outlets_individually_all_tabloids.png",
   plot_r1a_all_tabloids_individually,
   device = "png",
-  width = 22,
+  width = 30,
   height = 60,
   units = "cm",
   dpi = 300,
@@ -614,7 +881,7 @@ ggsave("plots/robustneess_1a_outlets_individually_all_tabloids.png",
 ggsave("plots/robustneess_1a_outlets_individually_all_tabloids.pdf",
   plot_r1a_all_tabloids_individually,
   device = "pdf",
-  width = 22,
+  width = 30,
   height = 60,
   units = "cm",
   dpi = 300,
