@@ -46,7 +46,8 @@ plot_1a <- results_1a |>
   # facet against actor
   facet_wrap(~actor, axes = "all")
 
-ggsave("plots/1a_paragraphs_politicians.png",
+# Figure 03 in the Manuscript
+ggsave("plots/Figure-03-DiD-visibility-politicians.png",
   plot_1a,
   device = "png",
   width = 16,
@@ -56,8 +57,8 @@ ggsave("plots/1a_paragraphs_politicians.png",
   scale = 2
 )
 
-
-ggsave("plots/1a_paragraphs_politicians.pdf",
+# Figure 03 in the Manuscript
+ggsave("plots/Figure-03-DiD-visibility-politicians.pdf",
   plot_1a,
   device = "pdf",
   width = 16,
@@ -112,7 +113,8 @@ plot_1b <- results_1b |>
   # facet against actor
   facet_wrap(~actor, axes = "all")
 
-ggsave("plots/1b_paragraphs_parties.png",
+# Figure B8 in the Appendix
+ggsave("plots/Figure-B8-DiD-visibility-parties.png",
   plot_1b,
   device = "png",
   width = 16,
@@ -123,7 +125,7 @@ ggsave("plots/1b_paragraphs_parties.png",
 )
 
 
-ggsave("plots/1b_paragraphs_parties.pdf",
+ggsave("plots/Figure-B8-DiD-visibility-parties.pdf",
   plot_1b,
   device = "pdf",
   width = 16,
@@ -135,7 +137,6 @@ ggsave("plots/1b_paragraphs_parties.pdf",
 
 
 # 2a sentiment politicians
-
 results_2a <- readRDS("results/2a_sentiment_politicians.RDS")
 
 results_2a$`Treatment Period` <- factor(ifelse(results_2a$pre_treatment,
@@ -173,8 +174,8 @@ plot_2a <- results_2a |>
   # facet against actor
   facet_wrap(~actor, axes = "all")
 
-
-ggsave("plots/2a_sentiment_politicians.png",
+# Figure 05 in the Manuscript
+ggsave("plots/Figure-05-DiD-favorability-politicians.png",
   plot_2a,
   device = "png",
   width = 16,
@@ -184,7 +185,7 @@ ggsave("plots/2a_sentiment_politicians.png",
   scale = 2
 )
 
-ggsave("plots/2a_sentiment_politicians.pdf",
+ggsave("plots/Figure-05-DiD-favorability-politicians.pdf",
   plot_2a,
   device = "pdf",
   width = 16,
@@ -237,7 +238,8 @@ plot_2b <- results_2b |>
   # facet against actor
   facet_wrap(~actor, axes = "all")
 
-ggsave("plots/2b_sentiment_parties.png",
+# Figure B9 in the Appendix
+ggsave("plots/Figure-B9-DiD-favorability-parties.png",
   plot_2b,
   device = "png",
   width = 16,
@@ -247,7 +249,7 @@ ggsave("plots/2b_sentiment_parties.png",
   scale = 2
 )
 
-ggsave("plots/2b_sentiment_parties.pdf",
+ggsave("plots/Figure-B9-DiD-favorability-parties.pdf",
   plot_2b,
   device = "pdf",
   width = 16,
@@ -299,7 +301,8 @@ plot_r1a_kurz <- results_rob_1a |>
   # facet against outlet
   facet_wrap(~outlet, axes = "all")
 
-ggsave("plots/robustneess_1a_outlets_individually_kurz.png",
+# Figure 04 in the Manuscript
+ggsave("plots/Figure-04-DiD-visibilty-kurz-non-pooled.png",
   plot_r1a_kurz,
   device = "png",
   width = 22,
@@ -309,7 +312,7 @@ ggsave("plots/robustneess_1a_outlets_individually_kurz.png",
   scale = 2
 )
 
-ggsave("plots/robustneess_1a_outlets_individually_kurz.pdf",
+ggsave("plots/Figure-04-DiD-visibilty-kurz-non-pooled.pdf",
   plot_r1a_kurz,
   device = "pdf",
   width = 22,
@@ -352,7 +355,8 @@ plot_r1a_strache <- results_rob_1a |>
   # facet against outlet
   facet_wrap(~outlet, axes = "all")
 
-ggsave("plots/robustneess_1a_outlets_individually_strache.png",
+# Figure B1 in the Appendix
+ggsave("plots/Figure-B1-DiD-visibilty-strache-non-pooled.png",
   plot_r1a_strache,
   device = "png",
   width = 22,
@@ -362,7 +366,7 @@ ggsave("plots/robustneess_1a_outlets_individually_strache.png",
   scale = 2
 )
 
-ggsave("plots/robustneess_1a_outlets_individually_strache.pdf",
+ggsave("plots/Figure-B1-DiD-visibilty-strache-non-pooled.pdf",
   plot_r1a_strache,
   device = "pdf",
   width = 22,
@@ -405,7 +409,8 @@ plot_r1a_mitterlehner <- results_rob_1a |>
   # facet against outlet
   facet_wrap(~outlet, axes = "all")
 
-ggsave("plots/robustneess_1a_outlets_individually_mitterlehner.png",
+# Figure B2 in the Appendix
+ggsave("plots/Figure-B2-DiD-visibility-mitterlehner-non-pooled.png",
   plot_r1a_mitterlehner,
   device = "png",
   width = 22,
@@ -415,7 +420,7 @@ ggsave("plots/robustneess_1a_outlets_individually_mitterlehner.png",
   scale = 2
 )
 
-ggsave("plots/robustneess_1a_outlets_individually_mitterlehner.pdf",
+ggsave("plots/Figure-B2-DiD-visibility-mitterlehner-non-pooled.pdf",
   plot_r1a_mitterlehner,
   device = "pdf",
   width = 22,
@@ -458,7 +463,8 @@ plot_r1a_spoe_leader <- results_rob_1a |>
   # facet against outlet
   facet_wrap(~outlet, axes = "all")
 
-ggsave("plots/robustneess_1a_outlets_individually_spoe_leader.png",
+# Figure B3 in the Appendix
+ggsave("plots/Figure-B3-DiD-visibility-spoeleader-non-pooled.png",
   plot_r1a_spoe_leader,
   device = "png",
   width = 22,
@@ -468,7 +474,7 @@ ggsave("plots/robustneess_1a_outlets_individually_spoe_leader.png",
   scale = 2
 )
 
-ggsave("plots/robustneess_1a_outlets_individually_spoe_leader.pdf",
+ggsave("plots/Figure-B3-DiD-visibility-spoeleader-non-pooled.pdf",
   plot_r1a_spoe_leader,
   device = "pdf",
   width = 22,
@@ -522,7 +528,8 @@ plot_r2a_kurz <- results_rob_2a |>
   # facet against outlet
   facet_wrap(~ outlet)
 
-ggsave("plots/robustness_2a_outlets_individually_kurz.png",
+# Figure B4 in the Appendix
+ggsave("plots/Figure-B4-DiD-favorability-kurz-non-pooled.png",
   plot_r2a_kurz,
   device = "png",
   width = 22,
@@ -532,7 +539,7 @@ ggsave("plots/robustness_2a_outlets_individually_kurz.png",
   scale = 2
 )
 
-ggsave("plots/robustness_2a_outlets_individually_kurz.pdf",
+ggsave("plots/Figure-B4-DiD-favorability-kurz-non-pooled.pdf",
   plot_r2a_kurz,
   device = "pdf",
   width = 22,
@@ -575,7 +582,8 @@ plot_r2a_strache <- results_rob_2a |>
   # facet against outlet
   facet_wrap(~ outlet)
 
-ggsave("plots/robustness_2a_outlets_individually_strache.png",
+# Figure B5 in the Appendix
+ggsave("plots/Figure-B5-DiD-favorability-strache-non-pooled.png",
   plot_r2a_strache,
   device = "png",
   width = 22,
@@ -585,7 +593,7 @@ ggsave("plots/robustness_2a_outlets_individually_strache.png",
   scale = 2
 )
 
-ggsave("plots/robustness_2a_outlets_individually_strache.pdf",
+ggsave("plots/Figure-B5-DiD-favorability-strache-non-pooled.pdf",
   plot_r2a_strache,
   device = "pdf",
   width = 22,
@@ -628,7 +636,8 @@ plot_r2a_mitterlehner <- results_rob_2a |>
   # facet against outlet
   facet_wrap(~ outlet)
 
-ggsave("plots/robustness_2a_outlets_individually_mitterlehner.png",
+# Figure B6 in the Appendix
+ggsave("plots/Figure-B6-DiD-favorability-mitterlehner-non-pooled.png",
   plot_r2a_mitterlehner,
   device = "png",
   width = 22,
@@ -638,7 +647,7 @@ ggsave("plots/robustness_2a_outlets_individually_mitterlehner.png",
   scale = 2
 )
 
-ggsave("plots/robustness_2a_outlets_individually_mitterlehner.pdf",
+ggsave("plots/Figure-B6-DiD-favorability-mitterlehner-non-pooled.pdf",
   plot_r2a_mitterlehner,
   device = "pdf",
   width = 22,
@@ -681,7 +690,8 @@ plot_r2a_spoe_leader <- results_rob_2a |>
   # facet against outlet
   facet_wrap(~ outlet)
 
-ggsave("plots/robustness_2a_outlets_individually_spoe_leader.png",
+# Figure B7 in the Appendix
+ggsave("plots/Figure-B7-DiD-favorability-spoeleader-non-pooled.png",
   plot_r2a_spoe_leader,
   device = "png",
   width = 22,
@@ -691,7 +701,7 @@ ggsave("plots/robustness_2a_outlets_individually_spoe_leader.png",
   scale = 2
 )
 
-ggsave("plots/robustness_2a_outlets_individually_spoe_leader.pdf",
+ggsave("plots/Figure-B7-DiD-favorability-spoeleader-non-pooled.pdf",
   plot_r2a_spoe_leader,
   device = "pdf",
   width = 22,
@@ -743,7 +753,8 @@ plot_r1a_all <- results_r1a_all |>
   # facet against actor
   facet_wrap(~actor, axes = "all")
 
-ggsave("plots/robustness_1a_all_tabloids.png",
+# Figure B10 in the Appendix
+ggsave("plots/Figure-B10-DiD-visibility-all-tabloids.png",
   plot_r1a_all,
   device = "png",
   width = 16,
@@ -753,7 +764,7 @@ ggsave("plots/robustness_1a_all_tabloids.png",
   scale = 2
 )
 
-ggsave("plots/robustness_1a_all_tabloids.pdf",
+ggsave("plots/Figure-B10-DiD-visibility-all-tabloids.pdf",
   plot_r1a_all,
   device = "pdf",
   width = 16,
@@ -803,8 +814,8 @@ plot_r2a_all <- results_r2a_all |>
   # facet against actor
   facet_wrap(~actor, axes = "all")
 
-
-ggsave("plots/robustness_2a_all_tabloids.png",
+# Figure B11 in the Appendix
+ggsave("plots/Figure-B11-DiD-favorability-all-tabloids.png",
   plot_r2a_all,
   device = "png",
   width = 16,
@@ -814,7 +825,7 @@ ggsave("plots/robustness_2a_all_tabloids.png",
   scale = 2
 )
 
-ggsave("plots/robustness_2a_all_tabloids.pdf",
+ggsave("plots/Figure-B11-DiD-favorability-all-tabloids.pdf",
   plot_r2a_all,
   device = "pdf",
   width = 16,
@@ -868,7 +879,8 @@ plot_r1a_all_tabloids_individually <- results_rob_1a_all_tabloids_individually |
   # facet against outlet
   facet_wrap(~ outlet * actor, ncol = 4, axes = "all")
 
-ggsave("plots/robustneess_1a_outlets_individually_all_tabloids.png",
+# Figure B12 in the Appendix
+ggsave("plots/Figure-B12-DiD-visibility-tabloids-non-pooled.png",
   plot_r1a_all_tabloids_individually,
   device = "png",
   width = 30,
@@ -878,7 +890,7 @@ ggsave("plots/robustneess_1a_outlets_individually_all_tabloids.png",
   scale = 2
 )
 
-ggsave("plots/robustneess_1a_outlets_individually_all_tabloids.pdf",
+ggsave("plots/Figure-B12-DiD-visibility-tabloids-non-pooled.pdf",
   plot_r1a_all_tabloids_individually,
   device = "pdf",
   width = 30,
@@ -931,6 +943,7 @@ plot_r2a_all_tabloids_individually <- results_rob_2a_all_tabloids_individually |
   # facet against outlet
   facet_wrap(~ outlet * actor, ncol = 3)
 
+# Figure neither in the Manuscript nor in the Appendix 
 ggsave("plots/robustneess_2a_outlets_individually_all_tabloids.png",
   plot_r2a_all_tabloids_individually,
   device = "png",

@@ -45,8 +45,8 @@ plot_3a <- results_3a |>
   # facet against actor
   facet_wrap(~actor)
 
-
-ggsave("plots/3a_synthdid.png",
+# Figure B13 in the Appendix
+ggsave("plots/Figure-B13-synth-DiD-visibility.png",
        plot_3a,
        device = "png",
        width = 16,
@@ -57,7 +57,7 @@ ggsave("plots/3a_synthdid.png",
 )
 
 
-ggsave("plots/3a_synthdid.pdf",
+ggsave("plots/Figure-B13-synth-DiD-visibility.pdf",
        plot_3a,
        device = "pdf",
        width = 16,
@@ -67,7 +67,7 @@ ggsave("plots/3a_synthdid.pdf",
        scale = 2
 )
 
-# Table for Appendix of average effect size
+# Table B1 for Appendix of average effect size
 
 results_3a_total <- readRDS("results/3a_synthdid_total.RDS")
 
@@ -77,5 +77,5 @@ results_3a_total$`ATET (se)` <- paste0(round(results_3a_total$tau_hat, 2),
                                        ")",
                                        ifelse(results_3a_total$pval < 0.001, "***", ""))
 
-
-knitr::kable(t(results_3a_total[, c("actor", "ATET (se)")]), "latex", booktabs = TRUE)
+# Render to latex
+# knitr::kable(t(results_3a_total[, c("actor", "ATET (se)")]), "latex", booktabs = TRUE)

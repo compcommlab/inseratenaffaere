@@ -40,6 +40,7 @@ weekly_articles <- df_weeklyarticles |>
   ) +
   coord_cartesian(ylim = c(0, 200))
 
+# This figure is not in the Manuscript or Appendix
 ggsave("plots/01_descriptives_weekly_articles.png",
   weekly_articles,
   device = "png",
@@ -50,7 +51,7 @@ ggsave("plots/01_descriptives_weekly_articles.png",
   scale = 2
 )
 
-
+# This figure is not in the Manuscript or Appendix
 ggsave("plots/01_descriptives_weekly_articles.pdf",
   weekly_articles,
   device = "pdf",
@@ -90,7 +91,8 @@ daily_sentiment <- df_dailysentiment |>
   coord_cartesian(ylim = c(-0.4, 0.4)) +
   geom_hline(yintercept = 0)
 
-ggsave("plots/01_descriptives_daily_sentiment.png",
+# Figure 2 in the Manuscript
+ggsave("plots/Figure-02_descriptives_daily_sentiment.png",
   daily_sentiment,
   device = "png",
   width = 16,
@@ -100,8 +102,8 @@ ggsave("plots/01_descriptives_daily_sentiment.png",
   scale = 2
 )
 
-
-ggsave("plots/01_descriptives_daily_sentiment.pdf",
+# Figure 2 in the Manuscript
+ggsave("plots/Figure-02_descriptives_daily_sentiment.pdf",
   daily_sentiment,
   device = "pdf",
   width = 16,

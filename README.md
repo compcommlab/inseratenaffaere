@@ -1,11 +1,6 @@
 # Inseratenaffäre
 
-Replication Materials for DID Analyis
-
-# Todos
-
-- Rename all files / output so it matches the figure names in the submission
-
+Replication Materials for DID Analyis in the manuscript *The Austrian Political Advertisement Scandal: Searching for Patterns of “Journalism for Sale”*
 
 # Datasets
 
@@ -13,6 +8,10 @@ Replication Materials for DID Analyis
 - `data/parties_random_sample.rds`: Contains results of content analysis of randomly sampled articles that mention a political party (ÖVP, SPÖ, FPÖ, Grüne, NEOS)
 
 Both stored as RDS (version 3; writer version 4.3.1; UTF-8 encoded; with xz compression; format is "xdr").
+
+# Plots
+
+The file names of the plots correspond to the figure numbering in the manuscript and appendix. Also note that the comments for each plotting script also includes the figure number as found in the manuscript.
 
 # Scripts
 

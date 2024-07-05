@@ -71,7 +71,8 @@ actors <- rbind(actors, column_totals)
 actors <- actors |>
   mutate(across(Kurz_paragraphs:n.y, ~ format(.x, big.mark = ",")))
 
-write_csv(actors, "tables/01_descriptives_actors_mentioned.csv")
+# Table 1 in the Manuscript
+write_csv(actors, "tables/Table-01_descriptives_actors_mentioned.csv")
 
 # Latex Output
 # knitr::kable(actors, format="latex", booktabs=T, format.args=list(big.mark=","))
@@ -126,6 +127,7 @@ actors <- rbind(actors, column_totals)
 actors <- actors |>
   mutate(across(`ÖVP_paragraphs`:n.y, ~ format(.x, big.mark = ",")))
 
-write_csv(actors, "tables/01_descriptives_parties_mentioned.csv")
+# Table A3 in the Appendix
+write_csv(actors, "tables/Table-A3_descriptives_parties_mentioned.csv")
 # Latex Output
 # knitr::kable(actors, format="latex", booktabs=T, format.args=list(big.mark=","))

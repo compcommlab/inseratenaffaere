@@ -169,3 +169,5 @@ results$pre_treatment <- results$year < treatment_year
 results$actor <- gsub("spoe_leader", "SPÖ-Leader", results$actor)
 
 saveRDS(results, file = "results/3a_synthdid_year.RDS")
+
+print(sessionInfo())

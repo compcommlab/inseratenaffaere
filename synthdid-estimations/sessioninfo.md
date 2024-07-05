@@ -21,17 +21,12 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] did_2.1.2   DRDID_1.0.6 dplyr_1.1.4
+[1] synthdid_0.0.9 dplyr_1.1.4   
 
 loaded via a namespace (and not attached):
- [1] Matrix_1.6-1      trust_0.1-8       gtable_0.3.5      compiler_4.3.1   
- [5] ggsignif_0.6.4    tidyselect_1.2.1  Rcpp_1.0.12       tidyr_1.3.1      
- [9] scales_1.3.0      lattice_0.21-8    ggplot2_3.5.1     R6_2.5.1         
-[13] ggpubr_0.6.0      generics_0.1.3    backports_1.4.1   tibble_3.2.1     
-[17] car_3.1-2         munsell_0.5.1     lubridate_1.9.3   pillar_1.9.0     
-[21] rlang_1.1.4       utf8_1.2.4        broom_1.0.5       timechange_0.3.0 
-[25] cli_3.6.3         withr_3.0.0       magrittr_2.0.3    grid_4.3.1       
-[29] BMisc_1.4.6       lifecycle_1.0.4   vctrs_0.6.5       rstatix_0.7.2    
-[33] glue_1.7.0        data.table_1.15.4 abind_1.4-5       carData_3.0-5    
-[37] fansi_1.0.6       colorspace_2.1-0  purrr_1.0.2       pkgconfig_2.0.3
+ [1] utf8_1.2.4       R6_2.5.1         lubridate_1.9.3  tidyselect_1.2.1
+ [5] magrittr_2.0.3   glue_1.7.0       tibble_3.2.1     pkgconfig_2.0.3 
+ [9] timechange_0.3.0 generics_0.1.3   lifecycle_1.0.4  mvtnorm_1.2-5   
+[13] cli_3.6.3        fansi_1.0.6      vctrs_0.6.5      withr_3.0.0     
+[17] compiler_4.3.1   pillar_1.9.0     rlang_1.1.4  
 ```
