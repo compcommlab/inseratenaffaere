@@ -18,6 +18,9 @@ df <- df |> mutate(actors = Kurz + Mitterlehner + Strache + `SPÖ-Leader`)
 # filter out paragraphs without any actor mentioned
 df <- df[df$actors > 0, ]
 
+# total number of articles
+df |> distinct(doc_uid) |> nrow()
+
 # how many times was more than one actor mentioned in a paragraph?
 more_than_one <- nrow(df[df$actors > 1, ])
 exactly_one <- nrow(df[df$actors == 1, ])
