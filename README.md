@@ -2,11 +2,6 @@
 
 Replication Materials for DID Analyis
 
-# Todos
-
-- Rename all files / output so it matches the figure names in the submission
-
-
 # Datasets
 
 - `data/dataset.rds`: Contains results of content analysis of all articles mention one of the actors (Kurz, Strache, Mitterlehner). 
