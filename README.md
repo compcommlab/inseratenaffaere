@@ -1,6 +1,9 @@
 # Inseratenaffäre
 
-Replication Materials for DID Analyis
+Replication Materials for the journal article *The Austrian Political Advertisement Scandal: Patterns of “Journalism for Sale”* published in *The International Journal of Press/Politics* by Balluff, P., Eberl, J.-M., Oberhänsli, S. J., Bernhard-Harrer, J., Boomgaarden, H. G., Fahr, A., & Huber, M. in 2024.
+
+Link: https://doi.org/10.1177/19401612241285672
+
 
 # Datasets
 
